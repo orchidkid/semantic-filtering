@@ -21,6 +21,7 @@ body {
 }
 
 .left {
+    height:405px;
     position:sticky;
     top:0;
     border-right: 1px solid #eee;

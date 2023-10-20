@@ -23,7 +23,7 @@ body {
     border-right: 1px solid #eee;
 }
 
-h1 {
+h1, h2 {
     font-size: 20px;
     margin-bottom: 20px;
 }

@@ -22,7 +22,7 @@ const removedOutput = document.getElementById('removedOutput');
 const exportButton = document.getElementById('exportButton');
 
 loadButton.addEventListener('click', () => {
-    phrasesOutput.innerHTML = phrasesInput.value.split('\n').map(line => `<span class = "added">${line.toLowerCase()}</span>`).join('');
+    phrasesOutput.innerHTML = phrasesInput.value.split('\n').map(line => `<span>${line.toLowerCase()}</span><br>`).join('');
 });
 
 addButton.addEventListener('click', () => {
@@ -41,9 +41,11 @@ highlightButton.addEventListener('click', () => {
         const highlighted = minusWords.some(({ word, type }) => {
             if (type === 'Часткове входження' && phrase.includes(word)) {
                 return true;
-            } else if (type === 'Містить тільки дане слово' && word === phrase) {
+            } else if (type === 'Містить тільки дане слово' && phrase.split(' ').length === 1 && phrase.includes(word)) {
                 return true;
             } else if (type === 'Фразове входження' && phrase.includes(word)) {
+                return true;
+            } else if (type === 'Точне входження' && phrase.split(' ').includes(word)) {
                 return true;
             }
             return false;
@@ -71,7 +73,7 @@ function updateMinusWordsOutput() {
     const outputHtml = minusWords.map(({ word, type }, index) => {
         return `
           <div class="minus-word-container">
-            ${word} (${type})
+            <span class="styled-minus-word">${word} &nbsp; (${type.toLowerCase()})</span>
             <div class="remove-button-container"><span class="remove-button" data-index="${index}" onclick="removeMinusWord(${index})">✖</span></div>
           </div>`;
     }).join('');
@@ -81,23 +83,23 @@ function updateMinusWordsOutput() {
 function updatePhrasesOutput() {
     const outputHtml = phrasesInput.value.split('\n').map((phrase) => {
         if (removedPhrases.includes(phrase)) {
-            return `<span class="removed">${phrase}</span>`;
+            return `<span class="removed">${phrase}</span><br>`;
         } else if (filteredPhrases.includes(phrase)) {
-            return `<span class="highlighted">${phrase}</span>`;
+            return `<span class="highlighted">${phrase}</span><br>`;
         }
-        return `<span>${phrase}</span>`;
+        return `<span>${phrase}</span><br>`;
     }).join('');
     phrasesOutput.innerHTML = outputHtml;
 }
 
 function updateFilteredOutput() {
-    const outputHtml = filteredPhrases.map((phrase) => `<span>${phrase}</span>`).join('');
-    filteredOutput.innerHTML = `Відфільтровані фрази:<br>${outputHtml}`;
+    const outputHtml = filteredPhrases.map((phrase) => `<span>${phrase}</span><br>`).join('');
+    filteredOutput.innerHTML = `${outputHtml}`;
 }
 
 function updateRemovedOutput() {
-    const outputHtml = removedPhrases.map((phrase) => `<span>${phrase}</span>`).join('');
-    removedOutput.innerHTML = `Видалені фрази:<br>${outputHtml}`;
+    const outputHtml = removedPhrases.map((phrase) => `<span>${phrase}</span><br>`).join('');
+    removedOutput.innerHTML = `${outputHtml}`;
 }
 
 function removeMinusWord(index) {
@@ -131,3 +133,37 @@ function exportToCsv() {
 
     URL.revokeObjectURL(url);
 }
+
+const exportMinusWordsButton = document.getElementById('exportMinusWordsButton');
+
+exportMinusWordsButton.addEventListener('click', () => {
+    const csvContent = minusWords.map(({ word, type }) => `${word},${type}`).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'minus_words.csv';
+    a.click();
+
+    URL.revokeObjectURL(url);
+});
+
+const importMinusWordsInput = document.getElementById('importMinusWordsInput');
+const importMinusWordsButton = document.getElementById('importMinusWordsButton');
+
+importMinusWordsButton.addEventListener('click', () => {
+    importMinusWordsInput.click();
+});
+
+importMinusWordsInput.addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    const content = await file.text();
+    const lines = content.split('\n');
+    minusWords.length = 0; // Очистіть поточний список мінус-слів
+    lines.forEach(line => {
+        const [word, type] = line.split(',');
+        minusWords.push({ word, type });
+    });
+    updateMinusWordsOutput();
+});

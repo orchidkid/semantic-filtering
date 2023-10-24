@@ -3,6 +3,11 @@
     margin:0;
     padding:0;
     box-sizing: border-box;
+    font-size:14px;
+}
+
+h2{
+    font-size:24px;
 }
 
 body {
@@ -11,12 +16,25 @@ body {
     padding: 0;
 }
 
+.wrapper {
+    margin: 50px 40px;
+    padding: 20px;
+}
+
+.instructions {
+    padding:30px;
+    margin-bottom:20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+
 .container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin: 50px 40px;
-    padding: 20px;
+    padding:30px;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     border-radius: 5px;
@@ -25,14 +43,17 @@ body {
     display:flex;
     flex-direction: column;
     align-items: center;
-    width: 28%;
+    width: 40%;
     padding-right: 20px;
     border-radius: 5px;
     position: sticky;
     top: 20px;
 }
 .right-panel {
-    width: 65%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 55%;
 }
 h2 {
     margin-top: 0;
@@ -46,7 +67,6 @@ label {
 textarea, select, input[type="text"] {
     width: 100%;
     padding: 10px;
-    margin: 10px 0 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
@@ -55,11 +75,12 @@ textarea, select, input[type="text"] {
 
 textarea, select, input {
     font-family:Arial, Helvetica, sans-serif;
-    font-size:12px;
 }
 
 button {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     background-color: #007BFF;
     color: #fff;
@@ -73,17 +94,16 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
 .output {
-    margin-top: 10px;
+    width:100%;
     border: 1px solid #ccc;
     padding: 10px;
-    background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .highlighted {
     color: rgb(0, 0, 0);
-    margin:10px 0 0 0;
 }
 .removed {
     text-decoration: line-through;
@@ -95,7 +115,6 @@ button:hover {
 }
 .output span {
     display: block;
-    margin-bottom: 5px;
 }
 .minus-word-container {
     display: flex;
@@ -110,14 +129,49 @@ button:hover {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 5px;
+    right:15px;
 }
 .minus-words-scroll {
     width:100%;
-    max-height: 300px;
+    max-height: 200px;
     overflow-y: auto;
 }
 
 .added{
     margin:10px 0 0 0;
+}
+
+.result-container {
+    width:100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top:30px;
+}
+
+.left-result-column,
+.right-result-column{
+    width:45%;
+}
+
+#filteredOutput,
+#removedOutput {
+    height:150px;
+    overflow: scroll;
+}
+
+.styled-minus-word {
+    display: inline-block;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+#importMinusWordsButton, #exportMinusWordsButton{
+    background-color: mediumseagreen;
+    }
+
+#importMinusWordsButton:hover, #exportMinusWordsButton:hover {
+    background-color: rgb(73, 146, 122);
 }

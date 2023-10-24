@@ -1,39 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Фільтрація фраз</title>
     <link href="style.css" rel="stylesheet">
 </head>
+
 <body>
-    <div class="container">
-        <div class="left-panel">
-            <h2>Мінус-слова</h2>
-            <input type="text" id="minusWord" placeholder="Введіть мінус-слово...">
-            <label for="minusWordType">Обрати тип входження</label>
-            <select id="minusWordType">
-                <option value="Часткове входження">Часткове входження</option>
-                <option value="Містить тільки дане слово">Містить тільки дане слово</option>
-                <option value="Фразове входження">Фразове входження</option>
-            </select>
-            <button id="addButton">Додати мінус-слово</button>
-            <button id="highlightButton">Оновити виділення</button>
-            <button id="filterButton">Відфільтрувати фрази</button>
-            <button id="exportButton">Експорт в CSV</button>
-            <div id="minusWordsOutput" class="output minus-words-scroll"></div>
+    <div class="wrapper">
+        <div class="container">
+            <div class="left-panel">
+                <h2>Мінус-слова</h2>
+                <input type="text" id="minusWord" placeholder="Введіть мінус-слово...">
+                <label for="minusWordType">Обрати тип входження</label>
+                <select id="minusWordType">
+                    <option value="Точне входження">Точне входження</option>
+                    <option value="Часткове входження">Часткове входження</option>
+                    <option value="Містить тільки дане слово">Однослівне входження</option>
+                    <option value="Фразове входження">Фразове входження</option>
+                </select>
+                <button id="addButton">Додати мінус-слово</button>
+                <button id="highlightButton">Оновити виділення</button>
+                <button id="filterButton">Відфільтрувати фрази</button>
+                <button id="exportButton">Експорт в CSV</button>
+                <button id="exportMinusWordsButton"><span class = "button-sign">Експорт мінус-слів</span></button>
+                <input type="file" id="importMinusWordsInput" style="display: none;">
+                <button id="importMinusWordsButton"><span class = "button-sign">Імпорт мінус-слів</span></button>
+                <div id="minusWordsOutput" class="output minus-words-scroll"></div>
+            </div>
+            <div class="right-panel">
+                <h2>Фрази</h2>
+                <textarea id="phrases" placeholder="Вставте фрази тут..."></textarea>
+                <button id="loadButton">Завантажити фрази</button>
+                <div id="phrasesOutput" class="output"></div>
+            </div>
         </div>
-        <div class="right-panel">
-            <h2>Фрази</h2>
-            <textarea id="phrases" placeholder="Вставте фрази тут..."></textarea>
-            <button id="loadButton">Завантажити фрази</button>
-            <div id="phrasesOutput" class="output"></div>
-            <div id="filteredPhrases" class="output"></div>
-            <div id="removedPhrases" class="output"></div>
-            <div id="filteredOutput" class="output"></div>
-            <div id="removedOutput" class="output"></div>
+        <div class="result-container">
+            <div class="left-result-column">
+                <h2>Відфільтровані фрази</h2>
+                <div id="filteredOutput" class="output"></div>
+            </div>
+            <div class="right-result-column">
+                <h2>Видалені фрази</h2>
+                <div id="removedOutput" class="output"></div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>

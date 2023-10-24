@@ -1,32 +1,39 @@
 <!DOCTYPE html>
-<html lang="uk">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Мінусація ключових запитів - Fadya</title>
+    <title>Фільтрація фраз</title>
+    <link href="style.css" rel="stylesheet">
 </head>
-
 <body>
     <div class="container">
-        <div class="left">
+        <div class="left-panel">
             <h2>Мінус-слова</h2>
-            <textarea id="minusWords" rows="10"></textarea>
-            <button id="highlightMinusWordsBtn">Відзначити мінус слова в списку</button>
-            <button id="filterKeywordsBtn">Фільтрувати список</button>
-            <button id="downloadCSVBtn">Скачати CSV</button>
+            <input type="text" id="minusWord" placeholder="Введіть мінус-слово...">
+            <label for="minusWordType">Обрати тип входження</label>
+            <select id="minusWordType">
+                <option value="Часткове входження">Часткове входження</option>
+                <option value="Містить тільки дане слово">Містить тільки дане слово</option>
+                <option value="Фразове входження">Фразове входження</option>
+            </select>
+            <button id="addButton">Додати мінус-слово</button>
+            <button id="highlightButton">Оновити виділення</button>
+            <button id="filterButton">Відфільтрувати фрази</button>
+            <button id="exportButton">Експорт в CSV</button>
+            <div id="minusWordsOutput" class="output minus-words-scroll"></div>
         </div>
-        <div class="right">
-            <h2>Ключові запити</h2>
-            <textarea id="keywordsInput" rows="10"></textarea>
-            <button id="loadKeywords">Завантажити</button>
-            <div id="keywordsDisplay"></div>
-            <h2>Відфільтровані ключові запити</h2>
-            <textarea id="filteredKeywords" rows="10"></textarea>
+        <div class="right-panel">
+            <h2>Фрази</h2>
+            <textarea id="phrases" placeholder="Вставте фрази тут..."></textarea>
+            <button id="loadButton">Завантажити фрази</button>
+            <div id="phrasesOutput" class="output"></div>
+            <div id="filteredPhrases" class="output"></div>
+            <div id="removedPhrases" class="output"></div>
+            <div id="filteredOutput" class="output"></div>
+            <div id="removedOutput" class="output"></div>
         </div>
     </div>
     <script src="script.js"></script>
 </body>
-
 </html>

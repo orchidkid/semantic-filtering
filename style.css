@@ -83,6 +83,7 @@ button:hover {
 }
 .highlighted {
     color: rgb(0, 0, 0);
+    margin:10px 0 0 0;
 }
 .removed {
     text-decoration: line-through;

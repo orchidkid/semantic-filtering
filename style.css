@@ -21,20 +21,12 @@ body {
     padding: 20px;
 }
 
-.instructions {
-    padding:30px;
-    margin-bottom:20px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-}
-
 
 .container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding:30px;
+    padding:50px;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     border-radius: 5px;
@@ -61,9 +53,21 @@ h2 {
 }
 label {
     display: block;
+    text-transform: uppercase;
     font-weight: bold;
-    margin: 15px 0 5px 0;
+    margin:0 0 15px 0;
+    text-align: center;
 }
+
+.search-words-in-list{
+    width:100%;
+}
+
+.minus-word-filtering-container{
+    width:100%;
+    margin-top:30px;
+}
+
 textarea, select, input[type="text"] {
     width: 100%;
     padding: 10px;
@@ -71,10 +75,15 @@ textarea, select, input[type="text"] {
     border-radius: 5px;
     outline: none;
     box-sizing:border-box;
+    resize: vertical;
 }
 
 textarea, select, input {
     font-family:Arial, Helvetica, sans-serif;
+}
+
+.right-panel textarea#phrases {
+    height:92.5px;
 }
 
 button {
@@ -82,7 +91,7 @@ button {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    background-color: #007BFF;
+    background-color: #7b97b5;
     color: #fff;
     border: none;
     padding: 10px;
@@ -168,10 +177,26 @@ button:hover {
     margin: 5px 0;
 }
 
-#importMinusWordsButton, #exportMinusWordsButton{
-    background-color: mediumseagreen;
+#addButton{
+    background-color: rgb(218, 117, 117);
+}
+
+#addButton:hover{
+    background-color: rgb(139, 74, 74);
+}
+
+#importMinusWordsButton, #exportMinusWordsButton, #exportButton{
+    background-color: rgb(110, 193, 148);
     }
 
-#importMinusWordsButton:hover, #exportMinusWordsButton:hover {
-    background-color: rgb(73, 146, 122);
+#importMinusWordsButton:hover, #exportMinusWordsButton:hover, #exportButton:hover {
+    background-color: rgb(58, 117, 98);
+}
+
+.match-pickup{
+    width:100%;
+}
+
+.buttons-container{
+    width:100%;
 }

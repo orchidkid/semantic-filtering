@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Фільтрація фраз</title>
+    <link href="normalize.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
 </head>
 
@@ -12,26 +13,42 @@
     <div class="wrapper">
         <div class="container">
             <div class="left-panel">
-                <h2>Мінус-слова</h2>
-                <input type="text" id="minusWord" placeholder="Введіть мінус-слово...">
-                <label for="minusWordType">Обрати тип входження</label>
-                <select id="minusWordType">
-                    <option value="Точне входження">Точне входження</option>
-                    <option value="Часткове входження">Часткове входження</option>
-                    <option value="Містить тільки дане слово">Однослівне входження</option>
-                    <option value="Фразове входження">Фразове входження</option>
-                </select>
-                <button id="addButton">Додати мінус-слово</button>
-                <button id="highlightButton">Оновити виділення</button>
-                <button id="filterButton">Відфільтрувати фрази</button>
+                <div class="search-words-in-list">
+                    <label for="input">Пошук фраз в списку за словами</label>
+                    <input type="text" id="searchPhrases" placeholder="Слово для пошуку...">
+                    <select id="searchType" style="margin-top:15px;">
+                        <option value="Часткове входження">Часткове входження</option>
+                        <option value="Точне входження">Точне входження</option>
+                    </select>
+                    <button id="searchButton">Шукати</button>
+                </div>
+                <div class="minus-word-filtering-container">
+                    <label for="input">Робота з мінус-словами</label>
+                    <input type="text" id="minusWord" placeholder="Введіть мінус-слово...">
+                    <div class="match-pickup">
+                        <select id="minusWordType" style="margin-top: 15px;">
+                            <option value="Точне входження">Точне входження</option>
+                            <option value="Часткове входження">Часткове входження</option>
+                            <option value="Містить тільки дане слово">Однослівне входження</option>
+                            <option value="Фразове входження">Фразове входження</option>
+                        </select>
+                        <button id="addButton">Додати мінус-слово</button>
+                    </div>
+                </div>
+                <div class="buttons-container">
+                    <button id="highlightButton">Оновити виділення</button>
+                    <button id="filterButton">Відфільтрувати фрази</button>
+                </div>
+                <div id="minusWordsOutput" class="output minus-words-scroll" style="margin-top:10px;"></div>
+                <div class="buttons-container" style="margin-top:10px;">
                 <button id="exportButton">Експорт в CSV</button>
-                <button id="exportMinusWordsButton"><span class = "button-sign">Експорт мінус-слів</span></button>
+                <button id="exportMinusWordsButton"><span class="button-sign">Експорт мінус-слів</span></button>
                 <input type="file" id="importMinusWordsInput" style="display: none;">
-                <button id="importMinusWordsButton"><span class = "button-sign">Імпорт мінус-слів</span></button>
-                <div id="minusWordsOutput" class="output minus-words-scroll"></div>
+                <button id="importMinusWordsButton"><span class="button-sign">Імпорт мінус-слів</span></button>
+            </div>
             </div>
             <div class="right-panel">
-                <h2>Фрази</h2>
+                <label for="textarea">Завантаження фраз та відображення списку</label>
                 <textarea id="phrases" placeholder="Вставте фрази тут..."></textarea>
                 <button id="loadButton">Завантажити фрази</button>
                 <div id="phrasesOutput" class="output"></div>

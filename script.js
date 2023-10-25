@@ -5,6 +5,10 @@ const phrasesInput = document.getElementById('phrases');
 const loadButton = document.getElementById('loadButton');
 const phrasesOutput = document.getElementById('phrasesOutput');
 
+const searchInput = document.getElementById('searchPhrases');
+const searchType = document.getElementById('searchType');
+const searchButton = document.getElementById('searchButton');
+
 const minusWordInput = document.getElementById('minusWord');
 const minusWordType = document.getElementById('minusWordType');
 const addButton = document.getElementById('addButton');
@@ -19,7 +23,6 @@ const filterButton = document.getElementById('filterButton');
 const filteredOutput = document.getElementById('filteredOutput');
 const removedOutput = document.getElementById('removedOutput');
 
-const exportButton = document.getElementById('exportButton');
 
 loadButton.addEventListener('click', () => {
     phrasesOutput.innerHTML = phrasesInput.value.split('\n').map(line => `<span>${line.toLowerCase()}</span><br>`).join('');
@@ -32,6 +35,25 @@ addButton.addEventListener('click', () => {
     updateMinusWordsOutput();
     clearMinusWord(); // Очищення поля введення мінус-слова
 });
+
+searchButton.addEventListener('click', () => {
+    const searchTerm = searchInput.value;
+    const type = searchType.value;
+    const phrases = phrasesInput.value.split('\n');
+
+    const filteredPhrases = phrases.filter(phrase => {
+        if (type === 'Часткове входження' && phrase.includes(searchTerm)) {
+            return true;
+        } else if (type === 'Точне входження' && phrase === searchTerm) {
+            return true;
+        }
+        return false;
+    });
+
+    phrasesOutput.innerHTML = filteredPhrases.map(phrase => `<span>${phrase}</span><br>`).join('');
+});
+
+
 
 highlightButton.addEventListener('click', () => {
     const phrases = phrasesInput.value.split('\n');

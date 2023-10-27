@@ -13,6 +13,8 @@ const minusWordType = document.getElementById('minusWordType');
 const addButton = document.getElementById('addButton');
 const minusWordsOutput = document.getElementById('minusWordsOutput');
 const minusWords = [];
+const conditionWordsInput = document.getElementById('conditionWords');
+const conditionType = document.getElementById('conditionType');
 
 const highlightButton = document.getElementById('highlightButton');
 const filteredPhrases = [];
@@ -21,6 +23,7 @@ const removedPhrases = [];
 const filterButton = document.getElementById('filterButton');
 const filteredOutput = document.getElementById('filteredOutput');
 const removedOutput = document.getElementById('removedOutput');
+
 
 const exportButton = document.getElementById('exportButton'); // Added this line
 
@@ -35,7 +38,15 @@ function containsCyrillic(text) {
 addButton.addEventListener('click', () => {
     const minusWord = minusWordInput.value;
     const type = minusWordType.value;
-    minusWords.push({ word: minusWord, type });
+    const conditionWords = conditionWordsInput.value.split(',').map(word => word.trim());  // Splitting by comma
+    const condition = conditionType.value;
+
+if (!minusWord) {
+        alert('Ви не ввели мінус-запит');
+        return;
+    }
+
+    minusWords.push({ word: minusWord, type, conditionWords, condition });
     updateMinusWordsOutput();
     clearMinusWord();
 });
@@ -73,18 +84,36 @@ highlightButton.addEventListener('click', () => {
     const phrases = phrasesInput.value.split('\n');
     filteredPhrases.length = 0;
     removedPhrases.length = 0;
+    
     phrases.forEach((phrase) => {
-        const highlighted = minusWords.some(({ word, type }) => {
-            if (type === 'Часткове входження' && phrase.includes(word)) {
-                return true;
-            } else if (type === 'Містить тільки дане слово' && phrase.split(' ').length === 1 && phrase.includes(word)) {
-                return true;
-            } else if (type === 'Фразове входження' && phrase.includes(word)) {
-                return true;
-            } else if (type === 'Точне входження' && phrase.split(' ').includes(word)) {
-                return true;
+        const highlighted = minusWords.some(({ word, type, conditionWords, condition }) => {
+            let phraseContainsMinusWord = false;
+            
+            switch (type) {
+                case 'Часткове входження':
+                    phraseContainsMinusWord = phrase.includes(word);
+                    break;
+                case 'Точне входження':
+                    phraseContainsMinusWord = phrase.split(' ').includes(word);
+                    break;
+                case 'Містить тільки дане слово':
+                    phraseContainsMinusWord = phrase.split(' ').length === 1 && phrase.includes(word);
+                    break;
+                case 'Фразове входження':
+                    phraseContainsMinusWord = phrase.includes(word);
+                    break;
             }
-            return false;
+
+            if (!phraseContainsMinusWord) return false;
+
+            if (conditionWords && conditionWords.length) {
+                const phraseMatchesCondition = conditionWords.some(condWord => phrase.includes(condWord));
+                if ((condition === "contains" && !phraseMatchesCondition) || (condition === "notContains" && phraseMatchesCondition)) {
+                    return false;
+                }
+            }
+            
+            return true;
         });
 
         if (highlighted) {
@@ -93,8 +122,10 @@ highlightButton.addEventListener('click', () => {
             filteredPhrases.push(phrase);
         }
     });
+    
     updatePhrasesOutput();
 });
+
 
 filterButton.addEventListener('click', () => {
     updateFilteredOutput();
@@ -106,15 +137,22 @@ exportButton.addEventListener('click', () => {
 });
 
 function updateMinusWordsOutput() {
-    const outputHtml = minusWords.map(({ word, type }, index) => {
+    const outputHtml = minusWords.map(({ word, type, conditionWords, condition }, index) => {
+        let conditionString = "";
+
+        if (conditionWords && conditionWords.length && conditionWords[0]) {
+            conditionString = ` (${condition === 'contains' ? 'містить' : 'не містить'}: ${conditionWords.join(', ')})`;
+        }
+
         return `
-          <div class="minus-word-container">
-            <span class="styled-minus-word">${word} &nbsp; (${type.toLowerCase()})</span>
-            <div class="remove-button-container"><span class="remove-button" data-index="${index}" onclick="removeMinusWord(${index})">✖</span></div>
-          </div>`;
+            <div class="minus-word-container">
+                <span class="styled-minus-word">${word} &nbsp; (${type.toLowerCase()})${conditionString}</span>
+                <div class="remove-button-container"><span class="remove-button" data-index="${index}" onclick="removeMinusWord(${index})">✖</span></div>
+            </div>`;
     }).join('');
     minusWordsOutput.innerHTML = outputHtml;
 }
+
 
 function updatePhrasesOutput() {
     let outputHtml = '';
@@ -175,7 +213,13 @@ function exportToCsv() {
 const exportMinusWordsButton = document.getElementById('exportMinusWordsButton');
 
 exportMinusWordsButton.addEventListener('click', () => {
-    const csvContent = minusWords.map(({ word, type }) => `${word},${type}`).join('\n');
+    const csvContent = minusWords.map(({ word, type, conditionWords, condition }) => {
+        const conditionString = conditionWords && conditionWords.length ? 
+                                `${condition},${conditionWords.join('|')}` : 
+                                'none,';
+        return `${word},${type},${conditionString}`;
+    }).join('\n');
+
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
 
@@ -199,9 +243,12 @@ importMinusWordsInput.addEventListener('change', async (event) => {
     const content = await file.text();
     const lines = content.split('\n');
     minusWords.length = 0;
+
     lines.forEach(line => {
-        const [word, type] = line.split(',');
-        minusWords.push({ word, type });
+        const [word, type, condition, ...conditionWordsArray] = line.split(',');
+        const conditionWords = condition !== 'none' ? conditionWordsArray.join(',').split('|') : null;
+        minusWords.push({ word, type, conditionWords, condition });
     });
+
     updateMinusWordsOutput();
 });

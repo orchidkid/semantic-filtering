@@ -1,4 +1,3 @@
-
 // JavaScript код тут
 
 const phrasesInput = document.getElementById('phrases');
@@ -23,34 +22,46 @@ const filterButton = document.getElementById('filterButton');
 const filteredOutput = document.getElementById('filteredOutput');
 const removedOutput = document.getElementById('removedOutput');
 
+const exportButton = document.getElementById('exportButton'); // Added this line
 
 loadButton.addEventListener('click', () => {
     phrasesOutput.innerHTML = phrasesInput.value.split('\n').map(line => `<span>${line.toLowerCase()}</span><br>`).join('');
 });
+
+function containsCyrillic(text) {
+    return /[а-яёіїєґ]/i.test(text);
+}
 
 addButton.addEventListener('click', () => {
     const minusWord = minusWordInput.value;
     const type = minusWordType.value;
     minusWords.push({ word: minusWord, type });
     updateMinusWordsOutput();
-    clearMinusWord(); // Очищення поля введення мінус-слова
+    clearMinusWord();
 });
 
 searchButton.addEventListener('click', () => {
-    const searchTerm = searchInput.value;
+    const searchTerm = searchInput.value.trim();
     const type = searchType.value;
     const phrases = phrasesInput.value.split('\n');
 
-    const filteredPhrases = phrases.filter(phrase => {
+    const filteredPhrasesForSearch = phrases.filter(phrase => {
+        const words = phrase.split(/\s+/);
         if (type === 'Часткове входження' && phrase.includes(searchTerm)) {
             return true;
-        } else if (type === 'Точне входження' && phrase === searchTerm) {
+        } else if (type === 'Точне входження' && words.includes(searchTerm)) {
             return true;
         }
         return false;
     });
 
-    phrasesOutput.innerHTML = filteredPhrases.map(phrase => `<span>${phrase}</span><br>`).join('');
+
+    phrasesOutput.innerHTML = filteredPhrasesForSearch.map(phrase => {
+        if (removedPhrases.includes(phrase)) {
+            return `<span class="removed">${phrase}</span><br>`;
+        }
+        return `<span>${phrase}</span><br>`;
+    }).join('');
 });
 
 
@@ -103,25 +114,27 @@ function updateMinusWordsOutput() {
 }
 
 function updatePhrasesOutput() {
-    const outputHtml = phrasesInput.value.split('\n').map((phrase) => {
+    let outputHtml = '';
+
+    phrasesInput.value.split('\n').forEach((phrase) => {
         if (removedPhrases.includes(phrase)) {
-            return `<span class="removed">${phrase}</span><br>`;
-        } else if (filteredPhrases.includes(phrase)) {
-            return `<span class="highlighted">${phrase}</span><br>`;
+            outputHtml += `<span class="removed">${phrase}</span><br>`;
+        } else {
+            outputHtml += `<span>${phrase}</span><br>`;
         }
-        return `<span>${phrase}</span><br>`;
-    }).join('');
+    });
+
     phrasesOutput.innerHTML = outputHtml;
 }
 
 function updateFilteredOutput() {
     const outputHtml = filteredPhrases.map((phrase) => `<span>${phrase}</span><br>`).join('');
-    filteredOutput.innerHTML = `${outputHtml}`;
+    filteredOutput.innerHTML = outputHtml;
 }
 
 function updateRemovedOutput() {
     const outputHtml = removedPhrases.map((phrase) => `<span>${phrase}</span><br>`).join('');
-    removedOutput.innerHTML = `${outputHtml}`;
+    removedOutput.innerHTML = outputHtml;
 }
 
 function removeMinusWord(index) {
@@ -139,8 +152,8 @@ function exportToCsv() {
     const csvData = [];
     const maxLen = Math.max(filteredPhrases.length, removedPhrases.length);
     for (let i = 0; i < maxLen; i++) {
-        const filteredPhrase = i < filteredPhrases.length ? filteredPhrases[i] : '';
-        const removedPhrase = i < removedPhrases.length ? removedPhrases[i] : '';
+        const filteredPhrase = i < filteredPhrases.length ? `"${filteredPhrases[i]}"` : '""';
+        const removedPhrase = i < removedPhrases.length ? `"${removedPhrases[i]}"` : '""';
         csvData.push([filteredPhrase, removedPhrase]);
     }
 
@@ -182,7 +195,7 @@ importMinusWordsInput.addEventListener('change', async (event) => {
     const file = event.target.files[0];
     const content = await file.text();
     const lines = content.split('\n');
-    minusWords.length = 0; // Очистіть поточний список мінус-слів
+    minusWords.length = 0;
     lines.forEach(line => {
         const [word, type] = line.split(',');
         minusWords.push({ word, type });

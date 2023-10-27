@@ -45,16 +45,21 @@ searchButton.addEventListener('click', () => {
     const type = searchType.value;
     const phrases = phrasesInput.value.split('\n');
 
-    const filteredPhrasesForSearch = phrases.filter(phrase => {
-        const words = phrase.split(/\s+/);
-        if (type === 'Часткове входження' && phrase.includes(searchTerm)) {
-            return true;
-        } else if (type === 'Точне входження' && words.includes(searchTerm)) {
-            return true;
-        }
-        return false;
-    });
+    let filteredPhrasesForSearch;
 
+    if (!searchTerm) { // Check if search term is empty
+        filteredPhrasesForSearch = phrases;
+    } else {
+        filteredPhrasesForSearch = phrases.filter(phrase => {
+            const words = phrase.split(/\s+/);
+            if (type === 'Часткове входження' && phrase.includes(searchTerm)) {
+                return true;
+            } else if (type === 'Точне входження' && words.includes(searchTerm)) {
+                return true;
+            }
+            return false;
+        });
+    }
 
     phrasesOutput.innerHTML = filteredPhrasesForSearch.map(phrase => {
         if (removedPhrases.includes(phrase)) {
@@ -63,8 +68,6 @@ searchButton.addEventListener('click', () => {
         return `<span>${phrase}</span><br>`;
     }).join('');
 });
-
-
 
 highlightButton.addEventListener('click', () => {
     const phrases = phrasesInput.value.split('\n');

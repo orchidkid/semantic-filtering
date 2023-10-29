@@ -52,13 +52,19 @@ if (!minusWord) {
 });
 
 searchButton.addEventListener('click', () => {
+
+     if (phrasesOutput.innerHTML.trim() === '') {
+        alert('А що ж ми шукаємо, якщо ви не завантажили жодної фрази?');
+        return;  // Повернення з функції, щоб завершити її виконання
+    }
+    
     const searchTerm = searchInput.value.trim();
     const type = searchType.value;
     const phrases = phrasesInput.value.split('\n');
 
     let filteredPhrasesForSearch;
 
-    if (!searchTerm) { // Check if search term is empty
+    if (!searchTerm) {
         filteredPhrasesForSearch = phrases;
     } else {
         filteredPhrasesForSearch = phrases.filter(phrase => {
@@ -70,6 +76,7 @@ searchButton.addEventListener('click', () => {
             }
             return false;
         });
+    
     }
 
     phrasesOutput.innerHTML = filteredPhrasesForSearch.map(phrase => {

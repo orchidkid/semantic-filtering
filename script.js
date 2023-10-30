@@ -117,8 +117,6 @@ highlightButton.addEventListener('click', () => {
                 const phraseMatchesCondition = conditionWords.some(condWord => phrase.includes(condWord));
                 if ((condition === "contains" && !phraseMatchesCondition) || (condition === "notContains" && phraseMatchesCondition)) {
                     return false;
-                } else if (condition === "notContains") {
-                    return false;
                 }
             }
             

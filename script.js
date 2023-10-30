@@ -221,12 +221,15 @@ function exportToCsv() {
 const exportMinusWordsButton = document.getElementById('exportMinusWordsButton');
 
 exportMinusWordsButton.addEventListener('click', () => {
-    const csvContent = minusWords.map(({ word, type, conditionWords, condition }) => {
-        const conditionString = conditionWords && conditionWords.length ? 
-                                `${condition},${conditionWords.join('|')}` : 
-                                'none,';
-        return `${word},${type},${conditionString}`;
-    }).join('\n');
+const csvContent = minusWords.map(({ word, type, conditionWords, condition }) => {
+    let conditionString = "";
+    if (conditionWords && conditionWords.length) {
+        conditionString = `${condition},${conditionWords.join('|')}`;
+    } else {
+        conditionString = ',';
+    }
+    return `${word},${type},${conditionString}`;
+}).join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -252,11 +255,12 @@ importMinusWordsInput.addEventListener('change', async (event) => {
     const lines = content.split('\n');
     minusWords.length = 0;
 
-    lines.forEach(line => {
-        const [word, type, condition, ...conditionWordsArray] = line.split(',');
-        const conditionWords = condition !== 'none' ? conditionWordsArray.join(',').split('|') : null;
-        minusWords.push({ word, type, conditionWords, condition });
-    });
+lines.forEach(line => {
+    const [word, type, condition, ...conditionWordsArray] = line.split(',');
+    const conditionWords = condition && condition !== 'none' ? conditionWordsArray.join(',').split('|') : null;
+    const finalCondition = condition || 'none';
+    minusWords.push({ word, type, conditionWords, condition: finalCondition });
+});
 
     updateMinusWordsOutput();
 });

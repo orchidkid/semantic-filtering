@@ -201,8 +201,8 @@ function exportToCsv() {
     const csvData = [];
     const maxLen = Math.max(filteredPhrases.length, removedPhrases.length);
     for (let i = 0; i < maxLen; i++) {
-        const filteredPhrase = i < filteredPhrases.length ? `"${filteredPhrases[i]}"` : '""';
-        const removedPhrase = i < removedPhrases.length ? `"${removedPhrases[i]}"` : '""';
+        const filteredPhrase = i < filteredPhrases.length ? `"${filteredPhrases[i].replace(/,/g, '')}"` : '""';
+        const removedPhrase = i < removedPhrases.length ? `"${removedPhrases[i].replace(/,/g, '')}"` : '""';
         csvData.push([filteredPhrase, removedPhrase]);
     }
 

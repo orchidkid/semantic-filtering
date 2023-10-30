@@ -113,12 +113,14 @@ highlightButton.addEventListener('click', () => {
 
             if (!phraseContainsMinusWord) return false;
 
-            if (conditionWords && conditionWords.length) {
-                const phraseMatchesCondition = conditionWords.some(condWord => phrase.includes(condWord));
-                if ((condition === "contains" && !phraseMatchesCondition) || (condition === "notContains" && phraseMatchesCondition)) {
-                    return false;
-                }
-            }
+if (conditionWords && conditionWords.length) {
+    const phraseMatchesCondition = conditionWords.some(condWord => phrase.includes(condWord));
+    if (condition === "contains" && !phraseMatchesCondition) {
+        return false;
+    } else if (condition === "notContains" && !phraseMatchesCondition) {
+        return true;
+    }
+}
             
             return true;
         });

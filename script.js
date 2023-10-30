@@ -93,43 +93,42 @@ highlightButton.addEventListener('click', () => {
     removedPhrases.length = 0;
     
     phrases.forEach((phrase) => {
-        const highlighted = minusWords.some(({ word, type, conditionWords, condition }) => {
-            let phraseContainsMinusWord = false;
-            
-            switch (type) {
-                case 'Часткове входження':
-                    phraseContainsMinusWord = phrase.includes(word);
-                    break;
-                case 'Точне входження':
-                    phraseContainsMinusWord = phrase.split(' ').includes(word);
-                    break;
-                case 'Містить тільки дане слово':
-                    phraseContainsMinusWord = phrase.split(' ').length === 1 && phrase.includes(word);
-                    break;
-                case 'Фразове входження':
-                    phraseContainsMinusWord = phrase.includes(word);
-                    break;
-            }
-
-            if (!phraseContainsMinusWord) return false;
-
-if (conditionWords && conditionWords.length) {
-    const phraseMatchesCondition = conditionWords.some(condWord => phrase.includes(condWord));
-    if (condition === "contains" && !phraseMatchesCondition) {
-        return false;
-    } else if (condition === "notContains" && !phraseMatchesCondition) {
-        return true;
+const highlighted = minusWords.some(({ word, type, conditionWords, condition }) => {
+    let phraseContainsMinusWord = false;
+    
+    switch (type) {
+        case 'Часткове входження':
+            phraseContainsMinusWord = phrase.includes(word);
+            break;
+        case 'Точне входження':
+            phraseContainsMinusWord = phrase.split(' ').includes(word);
+            break;
+        case 'Містить тільки дане слово':
+            phraseContainsMinusWord = phrase.split(' ').length === 1 && phrase.includes(word);
+            break;
+        case 'Фразове входження':
+            phraseContainsMinusWord = phrase.includes(word);
+            break;
     }
-}
-            
-            return true;
-        });
 
-        if (highlighted) {
-            removedPhrases.push(phrase);
-        } else {
-            filteredPhrases.push(phrase);
+    if (!phraseContainsMinusWord) return false;
+
+    if (conditionWords && conditionWords.length) {
+        const phraseMatchesCondition = conditionWords.some(condWord => phrase.includes(condWord));
+        if ((condition === "contains" && !phraseMatchesCondition) || (condition === "notContains" && phraseMatchesCondition)) {
+            return false;
         }
+    }
+    
+    return true;
+});
+
+
+if (highlighted) {
+    removedPhrases.push(phrase);
+} else {
+    filteredPhrases.push(phrase);
+}
     });
     
     updatePhrasesOutput();
